@@ -1,7 +1,7 @@
 'use strict';
 
 const dialogflow = require('dialogflow');
-const config = require('./config');
+const config = require('./configTest');
 const express = require('express');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
@@ -353,7 +353,8 @@ async function sendToDialogFlow(sender, textString, params) {
                     data: params
                 }
             }
-        };
+		};
+		//console.log(request);
         const responses = await sessionClient.detectIntent(request);
 
         const result = responses[0].queryResult;
@@ -668,7 +669,7 @@ function sendAccountLinking(recipientId) {
 function greetUserText(userId) {
 	//first read user firstname
 	request({
-		uri: 'https://graph.facebook.com/v2.7/' + userId,
+		uri: 'https://graph.facebook.com/v3.2/' + userId,
 		qs: {
 			access_token: config.FB_PAGE_TOKEN
 		}
@@ -682,7 +683,7 @@ function greetUserText(userId) {
 				console.log("FB user: %s %s, %s",
 					user.first_name, user.last_name, user.gender);
 
-				sendTextMessage(userId, "Welcome " + user.first_name + '!');
+				sendTextMessage(userId, "Hi " + user.first_name + '!');
 			} else {
 				console.log("Cannot get data for fb user with id",
 					userId);
@@ -745,9 +746,15 @@ function receivedPostback(event) {
 	var payload = event.postback.payload;
 
 	switch (payload) {
+		case 'FACEBOOK_WELCOME':
+			 //greetUserText(senderID); 
+			 sendToDialogFlow(senderID, "Hello");
+			 break;
+		
 		default:
 			//unindentified payload
-			sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
+			//sendToDialogFlow(senderID, payload);
+			//sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
 			break;
 
 	}
