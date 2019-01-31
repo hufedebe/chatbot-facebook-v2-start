@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const app = express();
 const uuid = require('uuid');
-
+const requestP = require('request-promise');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -203,84 +203,75 @@ function handleEcho(messageId, appId, metadata) {
 }
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
-	switch (action) {
+	
+	
+	if(action =='get-username'){
+		let messageReceive= messages;
+		let flag = false;
+	
+		const optionGetUser ={
+			method: 'GET',
+			uri: 'https://graph.facebook.com/v3.2/' + sender,
+			qs: {
+				access_token: config.FB_PAGE_TOKEN
+			}
+		}
 
-		case 'get-username':
-			console.log(sender);
-			request({
-				uri: 'https://graph.facebook.com/v3.2/' + sender,
-				qs: {
-					access_token: config.FB_PAGE_TOKEN
-				},
-				variable:messages
-			}, function (error, response, body) {
-				if (!error && response.statusCode == 200) {
+		requestP(optionGetUser).then(fbRes=>{
+				var user = JSON.parse(fbRes);
+				if (user.first_name) {
+					console.log("Apunto de enviar a handleMessageInit");
+					handleMessageInit(messageReceive, user.id, user.first_name);
 					
-					var user = JSON.parse(body);
-					console.log(user);
-					if (user.first_name) {
-						handleMessageInit(messages, user.id, user.first_name);
-						//sendTextMessage(userId, "Hi " + user.first_name + '!');
-					} else {
-						handleMessageInit(messages, user.id, "Usuario Desconocido");
-					}
+					//	sendTextMessage(user.id, "Hi " + user.first_name + '!');
 				} else {
-					console.error(response.error);
+					handleMessageInit(messageReceive, user.id, "Usuario Desconocido");
 				}
-		
-			});
-
-			break;
-		default:
-			//unhandled action, just send back the text
-            //handleMessages(messages, sender);
+		});
+			
+	}else{
+			handleMessages(messages, sender);
 	}
+	
 }
 
 
 
-function handleMessageInit(message, sender,user){
-	console.log("mensaje",message.message);
-	switch (message.message) {
-		case "text": //text
-			console.log(user, "entrando a handleMessageInit");
-            message.text.text.forEach((text) => {
+function handleMessageInit(messages, sender,user){
 
-                if (text !== '') {
-					
-					sendTextMessage(sender, text.replace("UserName", user));
-                }
-            });
-            break;
-        case "quickReplies": //quick replies
-            let replies = [];
-            message.quickReplies.quickReplies.forEach((text) => {
-                let reply =
-                    {
-                        "content_type": "text",
-                        "title": text,
-                        "payload": text
-                    }
-                replies.push(reply);
-            });
-            sendQuickReply(sender, message.quickReplies.title, replies);
-            break;
-        case "image": //image
-            sendImageMessage(sender, message.image.imageUri);
-            break;
+	
+	let timeoutInterval = 1100;
+    let previousType ;
+    let cardTypes = [];
+    let timeout = 0;
+    for (var i = 0; i < messages.length; i++) {
+
+        if ( previousType == "card" && (messages[i].message != "card" || i == messages.length - 1)) {
+            timeout = (i - 1) * timeoutInterval;
+            setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
+            cardTypes = [];
+            timeout = i * timeoutInterval;
+            setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
+        } else if ( messages[i].message == "card" && i == messages.length - 1) {
+            cardTypes.push(messages[i]);
+            timeout = (i - 1) * timeoutInterval;
+            setTimeout(handleCardMessages.bind(null, cardTypes, sender), timeout);
+            cardTypes = [];
+        } else if ( messages[i].message == "card") {
+            cardTypes.push(messages[i]);
+        } else  {
+
+			timeout = i * timeoutInterval;
+			messages[i].text.text[0]=messages[i].text.text[0].replace("UserName", user);
+			console.log("Mensaje else",messages[i].text.text[0]);
+
+            setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
+        }
+
+        previousType = messages[i].message;
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
