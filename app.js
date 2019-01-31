@@ -204,7 +204,41 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
 	
-	
+
+	switch(action){
+		case 'get-username':
+				let messageReceive= messages;
+				let flag = false;
+			
+				const optionGetUser ={
+					method: 'GET',
+					uri: 'https://graph.facebook.com/v3.2/' + sender,
+					qs: {
+						access_token: config.FB_PAGE_TOKEN
+					}
+				}
+
+				requestP(optionGetUser).then(fbRes=>{
+						var user = JSON.parse(fbRes);
+						if (user.first_name) {
+							console.log("Apunto de enviar a handleMessageInit");
+							handleMessageInit(messageReceive, user.id, user.first_name);
+							
+							//	sendTextMessage(user.id, "Hi " + user.first_name + '!');
+						} else {
+							handleMessageInit(messageReceive, user.id, "Usuario Desconocido");
+						}
+				});
+
+				break;
+		default:
+			handleMessages(messages, sender);
+			break;
+	}
+
+		
+	/*
+
 	if(action =='get-username'){
 		let messageReceive= messages;
 		let flag = false;
@@ -228,10 +262,14 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 					handleMessageInit(messageReceive, user.id, "Usuario Desconocido");
 				}
 		});
+
+
 			
 	}else{
-			handleMessages(messages, sender);
+			
 	}
+
+	*/
 	
 }
 
