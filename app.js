@@ -204,11 +204,86 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
 	switch (action) {
+
+		case 'get-username':
+			console.log(sender);
+			request({
+				uri: 'https://graph.facebook.com/v3.2/' + sender,
+				qs: {
+					access_token: config.FB_PAGE_TOKEN
+				},
+				variable:messages
+			}, function (error, response, body) {
+				if (!error && response.statusCode == 200) {
+					
+					var user = JSON.parse(body);
+					console.log(user);
+					if (user.first_name) {
+						handleMessageInit(messages, user.id, user.first_name);
+						//sendTextMessage(userId, "Hi " + user.first_name + '!');
+					} else {
+						handleMessageInit(messages, user.id, "Usuario Desconocido");
+					}
+				} else {
+					console.error(response.error);
+				}
+		
+			});
+
+			break;
 		default:
 			//unhandled action, just send back the text
-            handleMessages(messages, sender);
+            //handleMessages(messages, sender);
 	}
 }
+
+
+
+function handleMessageInit(message, sender,user){
+	console.log("mensaje",message.message);
+	switch (message.message) {
+		case "text": //text
+			console.log(user, "entrando a handleMessageInit");
+            message.text.text.forEach((text) => {
+
+                if (text !== '') {
+					
+					sendTextMessage(sender, text.replace("UserName", user));
+                }
+            });
+            break;
+        case "quickReplies": //quick replies
+            let replies = [];
+            message.quickReplies.quickReplies.forEach((text) => {
+                let reply =
+                    {
+                        "content_type": "text",
+                        "title": text,
+                        "payload": text
+                    }
+                replies.push(reply);
+            });
+            sendQuickReply(sender, message.quickReplies.title, replies);
+            break;
+        case "image": //image
+            sendImageMessage(sender, message.image.imageUri);
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function handleMessage(message, sender) {
     switch (message.message) {
@@ -356,7 +431,7 @@ async function sendToDialogFlow(sender, textString, params) {
 		};
 		//console.log(request);
         const responses = await sessionClient.detectIntent(request);
-
+		//console.log(responses[0].queryResult);
         const result = responses[0].queryResult;
         handleDialogFlowResponse(sender, result);
     } catch (e) {
@@ -748,6 +823,9 @@ function receivedPostback(event) {
 	switch (payload) {
 		case 'FACEBOOK_WELCOME':
 			 //greetUserText(senderID); 
+			 if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			 }
 			 sendToDialogFlow(senderID, "Hello");
 			 break;
 		
