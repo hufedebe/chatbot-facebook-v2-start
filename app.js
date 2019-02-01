@@ -231,45 +231,22 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 				});
 
 				break;
+
+		case 'get-user-location':
+			var text = "Please tell me where you are 👇  ?";
+			var replies=[
+				{
+				  "content_type": "location"
+				}
+			  ];
+			sendQuickReplyLocation(sender,text,replies);
+			break;
 		default:
 			handleMessages(messages, sender);
 			break;
 	}
 
-		
-	/*
 
-	if(action =='get-username'){
-		let messageReceive= messages;
-		let flag = false;
-	
-		const optionGetUser ={
-			method: 'GET',
-			uri: 'https://graph.facebook.com/v3.2/' + sender,
-			qs: {
-				access_token: config.FB_PAGE_TOKEN
-			}
-		}
-
-		requestP(optionGetUser).then(fbRes=>{
-				var user = JSON.parse(fbRes);
-				if (user.first_name) {
-					console.log("Apunto de enviar a handleMessageInit");
-					handleMessageInit(messageReceive, user.id, user.first_name);
-					
-					//	sendTextMessage(user.id, "Hi " + user.first_name + '!');
-				} else {
-					handleMessageInit(messageReceive, user.id, "Usuario Desconocido");
-				}
-		});
-
-
-			
-	}else{
-			
-	}
-
-	*/
 	
 }
 
@@ -425,6 +402,7 @@ function handleDialogFlowResponse(sender, response) {
     if (isDefined(action)) {
         handleDialogFlowAction(sender, action, messages, contexts, parameters);
     } else if (isDefined(messages)) {
+		console.log("messages","entrando");
         handleMessages(messages, sender);
 	} else if (responseText == '' && !isDefined(action)) {
 		//dialogflow could not evaluate input.
@@ -460,7 +438,7 @@ async function sendToDialogFlow(sender, textString, params) {
 		};
 		//console.log(request);
         const responses = await sessionClient.detectIntent(request);
-		//console.log(responses[0].queryResult);
+		console.log(responses[0].queryResult);
         const result = responses[0].queryResult;
         handleDialogFlowResponse(sender, result);
     } catch (e) {
@@ -692,6 +670,32 @@ function sendQuickReply(recipientId, text, replies, metadata) {
 	callSendAPI(messageData);
 }
 
+
+/*
+ * Send a message with Quick Reply Location
+ *
+ */
+function sendQuickReplyLocation(recipientId, text, replies, metadata) {
+	var messageData = {
+		recipient: {
+			id: recipientId
+		},
+		message: {
+			text: text,
+			metadata: isDefined(metadata)?metadata:'',
+			quick_replies: replies,
+		}
+	};
+
+	callSendAPI(messageData);
+}
+
+
+
+
+
+
+
 /*
  * Send a read receipt to indicate the message has been read
  *
@@ -848,7 +852,7 @@ function receivedPostback(event) {
 	// The 'payload' param is a developer-defined field which is set in a postback 
 	// button for Structured Messages. 
 	var payload = event.postback.payload;
-
+	console.log("payload",payload);
 	switch (payload) {
 		case 'FACEBOOK_WELCOME':
 			 //greetUserText(senderID); 
@@ -857,7 +861,11 @@ function receivedPostback(event) {
 			 }
 			 sendToDialogFlow(senderID, "Hello");
 			 break;
-		
+		case 'beverages':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			sendToDialogFlow(senderID, "beverages");
 		default:
 			//unindentified payload
 			//sendToDialogFlow(senderID, payload);
