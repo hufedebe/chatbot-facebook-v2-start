@@ -101,7 +101,7 @@ app.get('/webhook/', function (req, res) {
  */
 app.post('/webhook/', function (req, res) {
 	var data = req.body;
-	console.log(JSON.stringify(data));
+	//console.log(JSON.stringify(data));
 
 
 
@@ -166,6 +166,8 @@ function receivedMessage(event) {
 	var messageAttachments = message.attachments;
 	var quickReply = message.quick_reply;
 
+	console.log("receivedMessage",message);
+
 	if (isEcho) {
 		handleEcho(messageId, appId, metadata);
 		return;
@@ -186,7 +188,8 @@ function receivedMessage(event) {
 
 function handleMessageAttachments(messageAttachments, senderID){
 	//for now just reply
-	sendTextMessage(senderID, "Attachment received. Thank you.");	
+	//sendTextMessage(senderID, "Attachment received. Thank you.");	
+		sendToDialogFlow(senderID,"Ubicacion");
 }
 
 function handleQuickReply(senderID, quickReply, messageId) {
@@ -240,6 +243,27 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 				}
 			  ];
 			sendQuickReplyLocation(sender,text,replies);
+			break;
+
+		case 'show-menu':
+			  
+			  sendTextMessage(sender,"Good! now let me think");
+
+			  const optionBar ={
+				method: 'GET',
+				uri: 'https://aify-test.herokuapp.com/search/restaurants_by_position/?latitude=48.85&longitude=2.35',
+				
+				}
+				sendTypingOn(sender);
+			requestP(optionBar).then(apiRes=>{
+					var response = JSON.parse(apiRes);
+					console.log(response);
+					var count = response.count;
+					sendTypingOff(sender);
+					sendTextMessage(sender,"Got it Found 30 different drinks in "+ count +" bars");
+			});
+
+			
 			break;
 		default:
 			handleMessages(messages, sender);
