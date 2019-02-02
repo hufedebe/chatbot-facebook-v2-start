@@ -259,9 +259,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 						var response = JSON.parse(apiRes);
 						console.log(response);
 						var count = response.count;
+						let results = response.results;
 						sendTypingOff(sender);
 						sendTextMessage(sender,"Got it Found 30 different drinks in "+ count +" bars");
-						sendListRecomendation(sender);
+						sendListRecomendation(sender,results);
 				});	
 
 
@@ -628,7 +629,7 @@ function sendButtonMessage(recipientId, text, buttons) {
 
 
 
-function sendListRecomendation(recipientId){
+function sendListRecomendation(recipientId, results){
 
 	var messageData = {
 		recipient: {
@@ -642,8 +643,8 @@ function sendListRecomendation(recipientId){
 					"top_element_style": "compact",
 					"elements": [
 					  {
-						"title": "Pot-au-feu",
-						"image_url": "https://image.afcdn.com/recipe/20141014/47748_w600.jpg",
+						"title": response[0].name,
+						"image_url": response[0].image_url,
 						"subtitle": "Chez Robert - 10 min walk",
 						"buttons": [
 						  {
@@ -659,8 +660,8 @@ function sendListRecomendation(recipientId){
 						}
 					  },
 					  {
-						"title": "Blanquet de veau",
-						"image_url": "https://www.maggi.fr/sites/default/files/styles/image_desktop/public/images-recettes/blanquette.JPG?itok=Gh7ipKK2&timestamp=1487239182",
+						"title": response[1].name,
+						"image_url": response[1].image_url,
 						"subtitle": "Chez Hugo - 12min walk",
 						"buttons": [
 						  {
@@ -676,8 +677,8 @@ function sendListRecomendation(recipientId){
 						}
 					  },
 					  {
-						"title": "Gigot d'agneau",
-						"image_url": "https://www.academiedugout.fr/images/17189/948-580/fotolia_27331797_xs.jpg",
+						"title": response[2].name,
+						"image_url": response[2].image_url,
 						"subtitle": "Chez Fernando - 7 min walk ",
 						"buttons": [
 						  {
@@ -693,8 +694,8 @@ function sendListRecomendation(recipientId){
 						}
 					  },
 					  {
-						"title": "Le coq au vin",
-						"image_url": "http://www.delicesdannie.com/blog/wp-content/uploads/2015/07/coq-au-vin.jpg",
+						"title": response[3].name,
+						"image_url": response[3].image_url,
 						"subtitle": "Chez Oscar - 15 min walk ",
 						"buttons": [
 						  {
