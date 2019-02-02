@@ -255,13 +255,16 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 				
 				}
 				sendTypingOn(sender);
-			requestP(optionBar).then(apiRes=>{
-					var response = JSON.parse(apiRes);
-					console.log(response);
-					var count = response.count;
-					sendTypingOff(sender);
-					sendTextMessage(sender,"Got it Found 30 different drinks in "+ count +" bars");
-			});
+				requestP(optionBar).then(apiRes=>{
+						var response = JSON.parse(apiRes);
+						console.log(response);
+						var count = response.count;
+						sendTypingOff(sender);
+						sendTextMessage(sender,"Got it Found 30 different drinks in "+ count +" bars");
+						sendListRecomendation(sender);
+				});	
+
+
 
 			
 			break;
@@ -622,6 +625,107 @@ function sendButtonMessage(recipientId, text, buttons) {
 
 	callSendAPI(messageData);
 }
+
+
+
+function sendListRecomendation(recipientId){
+
+	var messageData = {
+		recipient: {
+			id: recipientId
+		},
+		message: {
+			attachment: {
+				type: "template",
+				"payload": {
+					"template_type": "list",
+					"top_element_style": "compact",
+					"elements": [
+					  {
+						"title": "Pot-au-feu",
+						"image_url": "https://image.afcdn.com/recipe/20141014/47748_w600.jpg",
+						"subtitle": "Chez Robert - 10 min walk",
+						"buttons": [
+						  {
+							"type": "postback",
+							"payload": "Buy now",
+							"title": "Buy now"
+						  }
+						],
+						"default_action": {
+						  "type": "web_url",
+						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "webview_height_ratio": "tall"
+						}
+					  },
+					  {
+						"title": "Blanquet de veau",
+						"image_url": "https://www.maggi.fr/sites/default/files/styles/image_desktop/public/images-recettes/blanquette.JPG?itok=Gh7ipKK2&timestamp=1487239182",
+						"subtitle": "Chez Hugo - 12min walk",
+						"buttons": [
+						  {
+							"type": "postback",
+							"payload": "Buy now",
+							"title": "Buy now"
+						  }
+						],
+						"default_action": {
+						  "type": "web_url",
+						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "webview_height_ratio": "tall"
+						}
+					  },
+					  {
+						"title": "Gigot d'agneau",
+						"image_url": "https://www.academiedugout.fr/images/17189/948-580/fotolia_27331797_xs.jpg",
+						"subtitle": "Chez Fernando - 7 min walk ",
+						"buttons": [
+						  {
+							"type": "postback",
+							"payload": "Buy now",
+							"title": "Buy now"
+						  }
+						],
+						"default_action": {
+						  "type": "web_url",
+						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "webview_height_ratio": "tall"
+						}
+					  },
+					  {
+						"title": "Le coq au vin",
+						"image_url": "http://www.delicesdannie.com/blog/wp-content/uploads/2015/07/coq-au-vin.jpg",
+						"subtitle": "Chez Oscar - 15 min walk ",
+						"buttons": [
+						  {
+							"type": "postback",
+							"payload": "Buy now",
+							"title": "Buy now"
+						  }
+						],
+						"default_action": {
+						  "type": "web_url",
+						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "webview_height_ratio": "tall"
+						}
+					  }
+					],
+					"buttons": [
+					  {
+						"title": "View More",
+						"type": "postback",
+						"payload": "payload"
+					  }
+					]
+				  }
+			}
+		}
+	};
+
+	callSendAPI(messageData);
+
+}
+
 
 
 function sendGenericMessage(recipientId, elements) {
