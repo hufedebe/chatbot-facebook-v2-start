@@ -643,8 +643,8 @@ function sendListRecomendation(recipientId, results){
 					"top_element_style": "compact",
 					"elements": [
 					  {
-						"title": response[0].name,
-						"image_url": response[0].image_url,
+						"title": results[0].name,
+						"image_url": results[0].image_url,
 						"subtitle": "Chez Robert - 10 min walk",
 						"buttons": [
 						  {
@@ -660,8 +660,8 @@ function sendListRecomendation(recipientId, results){
 						}
 					  },
 					  {
-						"title": response[1].name,
-						"image_url": response[1].image_url,
+						"title": results[1].name,
+						"image_url": results[1].image_url,
 						"subtitle": "Chez Hugo - 12min walk",
 						"buttons": [
 						  {
@@ -677,8 +677,8 @@ function sendListRecomendation(recipientId, results){
 						}
 					  },
 					  {
-						"title": response[2].name,
-						"image_url": response[2].image_url,
+						"title": results[2].name,
+						"image_url": results[2].image_url,
 						"subtitle": "Chez Fernando - 7 min walk ",
 						"buttons": [
 						  {
@@ -694,8 +694,8 @@ function sendListRecomendation(recipientId, results){
 						}
 					  },
 					  {
-						"title": response[3].name,
-						"image_url": response[3].image_url,
+						"title": results[3].name,
+						"image_url": results[3].image_url,
 						"subtitle": "Chez Oscar - 15 min walk ",
 						"buttons": [
 						  {
