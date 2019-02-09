@@ -645,7 +645,7 @@ function sendListRecomendation(recipientId, results){
 					  {
 						"title": results[0].name,
 						"image_url": results[0].image_url,
-						"subtitle": "Chez Robert - 10 min walk",
+						"subtitle": results[0].walk_time +  " min walk",
 						"buttons": [
 						  {
 							"type": "postback",
@@ -655,14 +655,14 @@ function sendListRecomendation(recipientId, results){
 						],
 						"default_action": {
 						  "type": "web_url",
-						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "url": results[0].website,
 						  "webview_height_ratio": "tall"
 						}
 					  },
 					  {
 						"title": results[1].name,
 						"image_url": results[1].image_url,
-						"subtitle": "Chez Hugo - 12min walk",
+						"subtitle": results[1].walk_time +  " min walk",
 						"buttons": [
 						  {
 							"type": "postback",
@@ -672,14 +672,14 @@ function sendListRecomendation(recipientId, results){
 						],
 						"default_action": {
 						  "type": "web_url",
-						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "url": results[1].website,
 						  "webview_height_ratio": "tall"
 						}
 					  },
 					  {
 						"title": results[2].name,
 						"image_url": results[2].image_url,
-						"subtitle": "Chez Fernando - 7 min walk ",
+						"subtitle": results[2].walk_time +  " min walk",
 						"buttons": [
 						  {
 							"type": "postback",
@@ -689,14 +689,14 @@ function sendListRecomendation(recipientId, results){
 						],
 						"default_action": {
 						  "type": "web_url",
-						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "url": results[2].website,
 						  "webview_height_ratio": "tall"
 						}
 					  },
 					  {
 						"title": results[3].name,
 						"image_url": results[3].image_url,
-						"subtitle": "Chez Oscar - 15 min walk ",
+						"subtitle": results[3].walk_time +  " min walk",
 						"buttons": [
 						  {
 							"type": "postback",
@@ -706,7 +706,7 @@ function sendListRecomendation(recipientId, results){
 						],
 						"default_action": {
 						  "type": "web_url",
-						  "url": "https://www.google.com/maps/place/56+Rue+de+Villiers,+92300+Levallois-Perret,+Francia/@48.8906825,2.2788491,19z/data=!4m5!3m4!1s0x47e6657d848b3bf7:0x1121c18683dfdd7f!8m2!3d48.8907368!4d2.2795034",
+						  "url": results[3].website,
 						  "webview_height_ratio": "tall"
 						}
 					  }
