@@ -226,10 +226,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 						if (user.first_name) {
 							console.log("Apunto de enviar a handleMessageInit");
 							handleMessageInit(messageReceive, user.id, user.first_name);
-							
+							sendListInitOptions(sender);
 							//	sendTextMessage(user.id, "Hi " + user.first_name + '!');
 						} else {
 							handleMessageInit(messageReceive, user.id, "Usuario Desconocido");
+							sendListInitOptions(sender);
 						}
 				});
 
@@ -304,9 +305,9 @@ function handleMessageInit(messages, sender,user){
             cardTypes.push(messages[i]);
         } else  {
 
-			timeout = i * timeoutInterval;
-			messages[i].text.text[0]=messages[i].text.text[0].replace("UserName", user);
-			console.log("Mensaje else",messages[i].text.text[0]);
+					timeout = i * timeoutInterval;
+					messages[i].text.text[0]=messages[i].text.text[0].replace("UserName", user);
+					console.log("Mensaje else",messages[i].text.text[0]);
 
             setTimeout(handleMessage.bind(null, messages[i], sender), timeout);
         }
@@ -627,6 +628,76 @@ function sendButtonMessage(recipientId, text, buttons) {
 	callSendAPI(messageData);
 }
 
+
+
+function sendListInitOptions(recipientId){
+	var messageData = {
+		recipient: {
+			id: recipientId
+		},
+		message: {
+			attachment: {
+				"type": "template",
+				"payload": {
+					"template_type": "list",
+					"top_element_style": "compact",
+					"elements": [
+						{
+							"title": "We're chilling here",
+							"subtitle": "Find were we are now",
+							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DVJ6PPHM56NDZH22P4YP7SREIDN%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=634&height=897&srcWidth=918&srcHeight=1300",          
+							"buttons": [
+								{
+									"title": "Find Us",
+									"type": "postback",
+									 "payload":"find"           
+								}
+							]
+						},
+						{
+							"title": "Bars I can suggest",
+							"subtitle": "Bars I know around you",
+							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DQWOVKQZUZBFJEKHZ5H6MFI7ZCJ%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=252&height=200&srcWidth=252&srcHeight=200",          
+							"buttons": [
+								{
+									"title": "Bars I know here",
+									"type": "postback",
+									 "payload":"bars"           
+								}
+							]
+						},
+						{
+							"title": "Drinks I can suggest",
+							"subtitle": "Drinks I have in my memory cell after year of drinking activities",
+							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DTTEZUVAYC7EFDYXHXACWEGE4D7%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=278&height=181&srcWidth=278&srcHeight=181",          
+							"buttons": [
+								{
+									"title": "Drinks I know",
+									"type": "postback",
+									 "payload":"drinks I know"           
+								}
+							]
+						},
+						{
+							"title": "My preferences",
+							"subtitle": "Tell anything you want me to take into account when suggest something",
+							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DWLADLTOEDOFRCYFQZZOH2IZ3NB%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=266&height=190&srcWidth=266&srcHeight=190",          
+							"buttons": [
+								{
+									"title": "Update my preferences",
+									"type": "postback",
+									 "payload":"preferences"           
+								}
+							]
+						}
+					]
+				}
+			}
+		}
+	};
+
+	callSendAPI(messageData);
+}
 
 
 function sendListRecomendation(recipientId, results){
@@ -981,7 +1052,7 @@ function receivedPostback(event) {
 	// The 'payload' param is a developer-defined field which is set in a postback 
 	// button for Structured Messages. 
 	var payload = event.postback.payload;
-	console.log("payload",payload);
+	//console.log("payload",payload);
 	switch (payload) {
 		case 'FACEBOOK_WELCOME':
 			 //greetUserText(senderID); 
@@ -995,6 +1066,22 @@ function receivedPostback(event) {
 				sessionIds.set(senderID, uuid.v1());
 			}
 			sendToDialogFlow(senderID, "beverages");
+			break;
+		case 'bars':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			
+			sendToDialogFlow(senderID, "bars");
+			break;
+
+		case 'find':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			console.log("Entrando al find us");
+			sendToDialogFlow(senderID, "find");
+			break;
 		default:
 			//unindentified payload
 			//sendToDialogFlow(senderID, payload);
