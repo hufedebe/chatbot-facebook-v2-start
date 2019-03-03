@@ -168,6 +168,7 @@ function receivedMessage(event) {
 
 	console.log("receivedMessage",message);
 
+	
 	if (isEcho) {
 		handleEcho(messageId, appId, metadata);
 		return;
@@ -186,10 +187,115 @@ function receivedMessage(event) {
 }
 
 
+/*
+ * Postback Event
+ *
+ * This event is called when a postback is tapped on a Structured Message. 
+ * https://developers.facebook.com/docs/messenger-platform/webhook-reference/postback-received
+ * 
+ */
+function receivedPostback(event) {
+	var senderID = event.sender.id;
+	var recipientID = event.recipient.id;
+	var timeOfPostback = event.timestamp;
+
+	// The 'payload' param is a developer-defined field which is set in a postback 
+	// button for Structured Messages. 
+	var payload = event.postback.payload;
+	//console.log("payload",payload);
+	switch (payload) {
+		case 'FACEBOOK_WELCOME':
+			 //greetUserText(senderID); 
+			 if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			 }
+			 sendToDialogFlow(senderID, "Hello");
+			 break;
+		case 'beverages':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			sendToDialogFlow(senderID, "beverages");
+			break;
+		case 'bars':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			
+			sendToDialogFlow(senderID, "bars");
+			break;
+
+		case 'find':
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			console.log("Entrando al find us");
+			sendToDialogFlow(senderID, "find");
+			break;
+
+		case 'drinks':	
+
+				if (!sessionIds.has(senderID)) {
+					sessionIds.set(senderID, uuid.v1());
+				}
+			
+				sendToDialogFlow(senderID, "drinks");
+				sendOptionsDrinks(senderID);
+
+
+				break;
+		case 'list_cocktails':
+				if (!sessionIds.has(senderID)) {
+					sessionIds.set(senderID, uuid.v1());
+				}
+				console.log("hugo_test",payload.text);
+				//sendToDialogFlow(senderID, "drinks");
+				const optionDrinkBars ={
+					method: 'GET',
+					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=vins',
+					
+					}
+					sendTypingOn(senderID);
+
+					requestP(optionDrinkBars).then(apiRes=>{
+							var response = JSON.parse(apiRes);
+							//console.log(response);
+							var count = response.length;
+						//	let results = response.results;
+							sendTypingOff(senderID);
+							sendTextMessage(senderID,"Got it Found 30 different drinks in "+ count +" bars");
+							//sendListRecomendation(sender,results);
+					});	
+
+
+				break;
+				//sendOptionsDrinks(senderID);
+
+		default:
+			//unindentified payload
+			console.log(payload);
+			sendToDialogFlow(senderID, payload);
+			//sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
+			break;
+
+	}
+
+	console.log("Received postback for user %d and page %d with payload '%s' " +
+		"at %d", senderID, recipientID, payload, timeOfPostback);
+
+}
+
+
+
 function handleMessageAttachments(messageAttachments, senderID){
 	//for now just reply
 	//sendTextMessage(senderID, "Attachment received. Thank you.");	
-		sendToDialogFlow(senderID,"Ubicacion");
+	console.log("Entrnado Ubicacion");
+	console.log(messageAttachments[0].payload.coordinates);
+	/*
+	var ubicacion =" lat: "+  messageAttachments[0].payload.coordinates.lat+", long: "+messageAttachments[0].payload.coordinates.long;*/
+	sendToDialogFlow(senderID, "Ubicacion");
+	//sendToDialogFlow(senderID,JSON.stringify(messageAttachments[0].payload.coordinates));
 }
 
 function handleQuickReply(senderID, quickReply, messageId) {
@@ -264,12 +370,114 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 						sendTypingOff(sender);
 						sendTextMessage(sender,"Got it Found 30 different drinks in "+ count +" bars");
 						sendListRecomendation(sender,results);
-				});	
-
-
-
-			
+				});		
 			break;
+		case 'show-list-cocktails':
+			
+				const optionDrinkBars ={
+					method: 'GET',
+					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=vins',
+					
+					}
+					sendTypingOn(sender);
+
+					requestP(optionDrinkBars).then(apiRes=>{
+						var response = JSON.parse(apiRes);
+						console.log(response.length);
+
+						let arrayDrinks = []
+						for(var i=0 ; i<4;i++){
+
+								var tempOption={
+									"title": response[i].name,
+									"image_url":"http://pngimg.com/uploads/beer/beer_PNG2369.png",
+									"subtitle": response[i].ingredients,
+									"buttons": [
+										{
+										"type": "postback",
+										"payload": "ingredients",
+										"title": "Ingredients"
+										}
+									],
+										"default_action": {
+												"type": "web_url",
+												"url": "https://tardigrd.com/",
+												"webview_height_ratio": "tall"
+										}
+								}
+
+								arrayDrinks.push(tempOption);
+
+						}
+
+
+						var messageData = {
+							recipient: {
+								id: sender
+							},
+							message:{
+								attachment: {
+									type: "template",
+									"payload": {
+										"template_type": "list",
+										"top_element_style": "compact",
+										"elements": arrayDrinks
+										}
+								}
+							}}
+
+							callSendAPI(messageData);
+		
+							//sendListRecomendation(sender,results);
+					});	
+
+
+				break;
+
+
+		case 'type_of_bars':
+		
+		
+					const optionDrinkBars2 ={
+						method: 'GET',
+						uri: 'https://aify-test.herokuapp.com/search/tag/list/?format=json',
+						
+						}
+						sendTypingOn(sender);
+
+						requestP(optionDrinkBars2).then(apiRes=>{
+								var response = JSON.parse(apiRes);
+							
+								sendTypingOff(sender);
+								let arrayDrinks = []
+								for(var i=0 ; i<11;i++){
+				
+										var tempOption={
+											"content_type":"text",
+											"title":response[i].name,
+											"payload": response[i].name,
+										}
+				
+										arrayDrinks.push(tempOption);
+				
+								}
+				
+				
+								var messageData = {
+									recipient: {
+										id: sender
+									},
+									message:{
+										"text": "And what do you have in mind? (select from on the options or type it in)",
+										"quick_replies":arrayDrinks
+									}}
+				
+									callSendAPI(messageData);
+						});	
+
+
+
+					break;
 		default:
 			handleMessages(messages, sender);
 			break;
@@ -467,7 +675,7 @@ async function sendToDialogFlow(sender, textString, params) {
 		};
 		//console.log(request);
         const responses = await sessionClient.detectIntent(request);
-		console.log(responses[0].queryResult);
+		//console.log(responses[0].queryResult);
         const result = responses[0].queryResult;
         handleDialogFlowResponse(sender, result);
     } catch (e) {
@@ -630,6 +838,52 @@ function sendButtonMessage(recipientId, text, buttons) {
 
 
 
+function sendOptionsDrinks(recipientId){
+	
+		const optionDrinks ={
+			method: 'GET',
+			uri: 'https://aify-test.herokuapp.com/food/drinktag/list/',
+			
+		}
+		//sendTypingOn(recipientId);
+		requestP(optionDrinks).then(apiRes=>{
+				var response = JSON.parse(apiRes);
+				console.log(response.length);
+
+				let arrayDrinks = []
+				for(var i=0 ; i<11;i++){
+
+						var tempOption={
+							"content_type":"text",
+							"title":response[i].name,
+							"payload": "list_cocktails",
+						}
+
+						arrayDrinks.push(tempOption);
+
+				}
+
+
+				var messageData = {
+					recipient: {
+						id: recipientId
+					},
+					message:{
+						"text": " (Select or type it in the ingredients or the exact name, I will do my best 😉 )",
+						"quick_replies":arrayDrinks
+					}}
+
+					callSendAPI(messageData);
+		
+		});	
+
+
+
+}
+
+
+
+
 function sendListInitOptions(recipientId){
 	var messageData = {
 		recipient: {
@@ -645,7 +899,7 @@ function sendListInitOptions(recipientId){
 						{
 							"title": "We're chilling here",
 							"subtitle": "Find were we are now",
-							"image_url": "https://png.pngtree.com/element_pic/00/16/07/11578277afd02ba.jpg",          
+							"image_url": "https://purepng.com/public/uploads/large/purepng.com-robotrobotprogrammableautomatonelectronicscyborg-1701528371687rcmuo.png",          
 							"buttons": [
 								{
 									"title": "Find Us",
@@ -657,7 +911,7 @@ function sendListInitOptions(recipientId){
 						{
 							"title": "Bars I can suggest",
 							"subtitle": "Bars I know around you",
-							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DQWOVKQZUZBFJEKHZ5H6MFI7ZCJ%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=252&height=200&srcWidth=252&srcHeight=200",          
+							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
 									"title": "Bars I know here",
@@ -674,7 +928,7 @@ function sendListInitOptions(recipientId){
 								{
 									"title": "Drinks I know",
 									"type": "postback",
-									 "payload":"drinks I know"           
+									 "payload":"drinks"           
 								}
 							]
 						},
@@ -1037,63 +1291,6 @@ function callSendAPI(messageData) {
 
 
 
-/*
- * Postback Event
- *
- * This event is called when a postback is tapped on a Structured Message. 
- * https://developers.facebook.com/docs/messenger-platform/webhook-reference/postback-received
- * 
- */
-function receivedPostback(event) {
-	var senderID = event.sender.id;
-	var recipientID = event.recipient.id;
-	var timeOfPostback = event.timestamp;
-
-	// The 'payload' param is a developer-defined field which is set in a postback 
-	// button for Structured Messages. 
-	var payload = event.postback.payload;
-	//console.log("payload",payload);
-	switch (payload) {
-		case 'FACEBOOK_WELCOME':
-			 //greetUserText(senderID); 
-			 if (!sessionIds.has(senderID)) {
-				sessionIds.set(senderID, uuid.v1());
-			 }
-			 sendToDialogFlow(senderID, "Hello");
-			 break;
-		case 'beverages':
-			if (!sessionIds.has(senderID)) {
-				sessionIds.set(senderID, uuid.v1());
-			}
-			sendToDialogFlow(senderID, "beverages");
-			break;
-		case 'bars':
-			if (!sessionIds.has(senderID)) {
-				sessionIds.set(senderID, uuid.v1());
-			}
-			
-			sendToDialogFlow(senderID, "bars");
-			break;
-
-		case 'find':
-			if (!sessionIds.has(senderID)) {
-				sessionIds.set(senderID, uuid.v1());
-			}
-			console.log("Entrando al find us");
-			sendToDialogFlow(senderID, "find");
-			break;
-		default:
-			//unindentified payload
-			//sendToDialogFlow(senderID, payload);
-			//sendTextMessage(senderID, "I'm not sure what you want. Can you be more specific?");
-			break;
-
-	}
-
-	console.log("Received postback for user %d and page %d with payload '%s' " +
-		"at %d", senderID, recipientID, payload, timeOfPostback);
-
-}
 
 
 /*
