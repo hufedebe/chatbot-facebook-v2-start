@@ -899,7 +899,7 @@ function sendListInitOptions(recipientId){
 						{
 							"title": "We're chilling here",
 							"subtitle": "Find were we are now",
-							"image_url": "https://purepng.com/public/uploads/large/purepng.com-robotrobotprogrammableautomatonelectronicscyborg-1701528371687rcmuo.png",          
+							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
 									"title": "Find Us",
@@ -923,7 +923,7 @@ function sendListInitOptions(recipientId){
 						{
 							"title": "Drinks I can suggest",
 							"subtitle": "Drinks I have in my memory cell after year of drinking activities",
-							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DTTEZUVAYC7EFDYXHXACWEGE4D7%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=278&height=181&srcWidth=278&srcHeight=181",          
+							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
 									"title": "Drinks I know",
@@ -935,7 +935,7 @@ function sendListInitOptions(recipientId){
 						{
 							"title": "My preferences",
 							"subtitle": "Tell anything you want me to take into account when suggest something",
-							"image_url": "https://francecentral1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=jpg&cs=fFNQTw&docid=https%3A%2F%2Ftardigrd.sharepoint.com%3A443%2F_api%2Fv2.0%2Fdrives%2Fb!TA4YlMGKEU2IFAvFVau13LC36TDEl2pKt6LXLQ_l4ZMU3QD6TCg_SpS01zaRqh1G%2Fitems%2F0124UW4DWLADLTOEDOFRCYFQZZOH2IZ3NB%3Fversion%3DPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvdGFyZGlncmQuc2hhcmVwb2ludC5jb21AZTYxZjBjODctYjI3ZC00NmI1LTgwM2ItNDJmNjljYTFlN2E5IiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTU1MDQwNjUyNCIsImV4cCI6IjE1NTA0MjgxMjQiLCJlbmRwb2ludHVybCI6ImJ4QUlNSitES0UySDN6Um9lQVJxOXdDR1lPRDV0dFZZbnFNTDl2bEZEcXM9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMTUiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsImNpZCI6IllXWmtPV013T1dVdFl6QTBOQzB3TURBd0xUVTFNakF0WlRNeU1XWTBZbVF3T1RJeSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJPVFF4T0RCbE5HTXRPR0ZqTVMwMFpERXhMVGc0TVRRdE1HSmpOVFUxWVdKaU5XUmoiLCJuYW1laWQiOiIwIy5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8dXJuJTNhc3BvJTNhYW5vbiMyYTZlNTAyNDQ1YjM5OTQ0YzMwZGI3MTRjNTViZjU4Mzc2ZWU4NmMzMjI2NmI4YTYwNzQ3OGY4ZDE4NzYzYTNhIiwic2hhcmluZ2lkIjoieGNqSlU1bkNNa3lGVWxvTVBCcGxzZyIsInR0IjoiMCIsInVzZVBlcnNpc3RlbnRDb29raWUiOiIyIn0.R0JydTJmcGI5dHNVU0dGazZrRGRsNGRsSGRNaCs0YUYrSGFNd28xWG5zVT0&encodeFailures=1&width=266&height=190&srcWidth=266&srcHeight=190",          
+							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
 									"title": "Update my preferences",
