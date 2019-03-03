@@ -252,7 +252,7 @@ function receivedPostback(event) {
 				//sendToDialogFlow(senderID, "drinks");
 				const optionDrinkBars ={
 					method: 'GET',
-					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=vins',
+					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=Cocktails',
 					
 					}
 					sendTypingOn(senderID);
