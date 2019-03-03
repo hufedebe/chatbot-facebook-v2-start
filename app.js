@@ -376,7 +376,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 			
 				const optionDrinkBars ={
 					method: 'GET',
-					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=vins',
+					uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type=Cocktails',
 					
 					}
 					sendTypingOn(sender);
