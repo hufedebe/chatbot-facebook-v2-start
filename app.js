@@ -572,7 +572,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 					let idBar='';
 					var latitud= contexts[1].parameters.fields.number.numberValue;
 					var longitud= contexts[1].parameters.fields.number1.numberValue;
-					idBar = contexts[1].parameters.fields.idBar.stringValue;
+					idBar = contexts[1].parameters.fields.age.numberValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
 					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
 					var messageData = {
