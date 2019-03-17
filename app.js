@@ -568,11 +568,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 					break;
 		case 'show_bars':
-					console.log('show_bars', contexts[1].parameters);
-					let idBar='';
+					console.log('show_bars', contexts[1].parameters.fields.age.structValue);
+					var idBar='';
 					var latitud= contexts[1].parameters.fields.number.numberValue;
 					var longitud= contexts[1].parameters.fields.number1.numberValue;
-					idBar = contexts[1].parameters.fields.age.numberValue;
+					idBar = contexts[1].parameters.fields.age.structValue.fields.amount.numberValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
 					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
 					var messageData = {
