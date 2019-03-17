@@ -173,7 +173,15 @@ function receivedMessage(event) {
 		handleEcho(messageId, appId, metadata);
 		return;
 	} else if (quickReply) {
-		handleQuickReply(senderID, quickReply, messageId);
+		if( quickReply.payload=='type_bars'){
+			handleQuickReplyBars(senderID, message, messageId);
+		}else if(quickReply.payload=='list_cocktails'){
+			handleQuickReplyDrink(senderID,message,messageId);
+			console.log('QuickReply-list_cocktails ');
+		}else{
+			handleQuickReply(senderID, quickReply, messageId);
+		}
+	
 		return;
 	}
 
@@ -234,15 +242,11 @@ function receivedPostback(event) {
 			break;
 
 		case 'drinks':	
-
 				if (!sessionIds.has(senderID)) {
 					sessionIds.set(senderID, uuid.v1());
 				}
-			
 				sendToDialogFlow(senderID, "drinks");
 				sendOptionsDrinks(senderID);
-
-
 				break;
 		case 'list_cocktails':
 				if (!sessionIds.has(senderID)) {
@@ -270,6 +274,10 @@ function receivedPostback(event) {
 
 				break;
 				//sendOptionsDrinks(senderID);
+		case 'type_bars':
+				console.log('type_bars');
+				console.log(event);
+				break;
 
 		default:
 			//unindentified payload
@@ -290,13 +298,95 @@ function receivedPostback(event) {
 function handleMessageAttachments(messageAttachments, senderID){
 	//for now just reply
 	//sendTextMessage(senderID, "Attachment received. Thank you.");	
-	console.log("Entrnado Ubicacion");
+	console.log("Entrando Ubicacion");
 	console.log(messageAttachments[0].payload.coordinates);
 	/*
 	var ubicacion =" lat: "+  messageAttachments[0].payload.coordinates.lat+", long: "+messageAttachments[0].payload.coordinates.long;*/
-	sendToDialogFlow(senderID, "Ubicacion");
+	sendToDialogFlow(senderID, "lat: "+ messageAttachments[0].payload.coordinates.lat +" long: "+messageAttachments[0].payload.coordinates.long);
 	//sendToDialogFlow(senderID,JSON.stringify(messageAttachments[0].payload.coordinates));
 }
+
+function handleQuickReplyBars(senderID, meessage,messageID){
+	//var quickReplyPayload = quickReply.payload;
+	//console.log("Quick reply for message %s with payload %s", messageId, quickReplyPayload);
+	//send payload to api.ai
+	//sendToDialogFlow(senderID, quickReplyPayload);
+	console.log("Entrando al quickReply de TypeBars");
+	var optionGetIdBar={
+		method: 'GET',
+		uri: 'http://aify-test.herokuapp.com/api/v1/listing/?name_search='+meessage.text
+
+	}
+
+	requestP(optionGetIdBar).then(fbRes=>{
+			var barInformation = JSON.parse(fbRes);
+			sendToDialogFlow(senderID, barInformation.results[0].id);
+
+	});
+
+
+
+}
+
+
+function handleQuickReplyDrink(senderID, meessage,messageID){
+
+	var optionGetIdDrink={
+		method: 'GET',
+		uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/?drink_type='+meessage.text
+	}
+
+	requestP(optionGetIdDrink).then(fbRes=>{
+			var response = JSON.parse(fbRes);
+			//sendToDialogFlow(senderID, barInformation.results[0].id);
+			let arrayDrinks = []
+			for(var i=0 ; i<4;i++){
+
+					var tempOption={
+						"title": response[i].name,
+						"image_url":"http://pngimg.com/uploads/beer/beer_PNG2369.png",
+						"subtitle": response[i].ingredients,
+						"buttons": [
+							{
+							"type": "postback",
+							"payload": response[i].id,
+							"title": "Ingredients"
+							}
+						],
+							"default_action": {
+									"type": "web_url",
+									"url": "https://tardigrd.com/",
+									"webview_height_ratio": "tall"
+							}
+					}
+
+					arrayDrinks.push(tempOption);
+
+			}
+
+
+			var messageData = {
+				recipient: {
+					id: senderID
+				},
+				message:{
+					attachment: {
+						type: "template",
+						"payload": {
+							"template_type": "list",
+							"top_element_style": "compact",
+							"elements": arrayDrinks
+							}
+					}
+				}}
+
+				callSendAPI(messageData);
+	});
+
+
+
+}
+
 
 function handleQuickReply(senderID, quickReply, messageId) {
 	var quickReplyPayload = quickReply.payload;
@@ -436,11 +526,10 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 
 		case 'type_of_bars':
-		
-		
+
 					const optionDrinkBars2 ={
 						method: 'GET',
-						uri: 'https://aify-test.herokuapp.com/search/tag/list/?format=json',
+						uri: 'http://aify-test.herokuapp.com/api/v1/listing/',
 						
 						}
 						sendTypingOn(sender);
@@ -449,16 +538,16 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 								var response = JSON.parse(apiRes);
 							
 								sendTypingOff(sender);
-								let arrayDrinks = []
+								let arrayTypeBars = []
 								for(var i=0 ; i<11;i++){
 				
 										var tempOption={
 											"content_type":"text",
-											"title":response[i].name,
-											"payload": response[i].name,
+											"title":response.results[i].name,
+											"payload": 'type_bars',
 										}
 				
-										arrayDrinks.push(tempOption);
+										arrayTypeBars.push(tempOption);
 				
 								}
 				
@@ -469,7 +558,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 									},
 									message:{
 										"text": "And what do you have in mind? (select from on the options or type it in)",
-										"quick_replies":arrayDrinks
+										"quick_replies":arrayTypeBars
 									}}
 				
 									callSendAPI(messageData);
@@ -477,6 +566,37 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 
 
+					break;
+		case 'show_bars':
+					console.log('show_bars', contexts[1].parameters);
+				
+					var latitud= contexts[1].parameters.fields.number.numberValue;
+					var longitud= contexts[1].parameters.fields.number1.numberValue;
+					var idBar = contexts[1].parameters.fields.idBar.stringValue;
+					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
+					var messageData = {
+						recipient: {
+							id: sender
+						},
+						message:{
+							attachment:{
+								type :"template",
+								payload:{
+										template_type:"button",
+										text: "Check our recommendations",
+										buttons:[
+											{	"type":"web_url",
+												"url":"http://webview.tardigrd.com/?ids="+idBar+"&plat="+latitud+"&plon="+longitud,
+												"title":"See bars"
+											}
+										]
+								}
+							}
+						}
+					}
+	
+						callSendAPI(messageData);
+			
 					break;
 		default:
 			handleMessages(messages, sender);
