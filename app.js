@@ -569,11 +569,12 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 					break;
 		case 'show_bars':
 					console.log('show_bars', contexts[1].parameters);
-				
+					let idBar='';
 					var latitud= contexts[1].parameters.fields.number.numberValue;
 					var longitud= contexts[1].parameters.fields.number1.numberValue;
-					var idBar = contexts[1].parameters.fields.idBar.stringValue;
+					idBar = contexts[1].parameters.fields.idBar.stringValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
+					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
 					var messageData = {
 						recipient: {
 							id: sender
@@ -586,7 +587,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 										text: "Check our recommendations",
 										buttons:[
 											{	"type":"web_url",
-												"url":"http://webview.tardigrd.com/?ids="+idBar+"&plat="+latitud+"&plon="+longitud,
+												"url":"http://webview.tardigrd.com/case_tags/?id_tag="+idBar+"&plat="+latitud+"&plon="+longitud,
 												"title":"See bars"
 											}
 										]
