@@ -1018,48 +1018,48 @@ function sendListInitOptions(recipientId){
 					"top_element_style": "compact",
 					"elements": [
 						{
-							"title": "We're chilling here",
-							"subtitle": "Find were we are now",
+							"title": "I'm just chillin'",
+							"subtitle": "Just relax fellow human, life is short",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Find Us",
+									"title": "Let's chill",
 									"type": "postback",
 									 "payload":"find"           
 								}
 							]
 						},
 						{
-							"title": "Bars I can suggest",
-							"subtitle": "Bars I know around you",
+							"title": "Bars",
+							"subtitle": "If you need suggestions try my repertoire",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Bars I know here",
+									"title": "Bars",
 									"type": "postback",
 									 "payload":"bars"           
 								}
 							]
 						},
 						{
-							"title": "Drinks I can suggest",
-							"subtitle": "Drinks I have in my memory cell after year of drinking activities",
+							"title": "Drinks",
+							"subtitle": "Looking for inspiration? Try my memory cells drinking logs",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Drinks I know",
+									"title": "Drinks",
 									"type": "postback",
 									 "payload":"drinks"           
 								}
 							]
 						},
 						{
-							"title": "My preferences",
-							"subtitle": "Tell anything you want me to take into account when suggest something",
+							"title": "Preferences",
+							"subtitle": "Something I should be considering?",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Update my preferences",
+									"title": "Update",
 									"type": "postback",
 									 "payload":"preferences"           
 								}
