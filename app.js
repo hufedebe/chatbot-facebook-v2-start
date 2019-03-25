@@ -173,11 +173,17 @@ function receivedMessage(event) {
 		handleEcho(messageId, appId, metadata);
 		return;
 	} else if (quickReply) {
+
 		if( quickReply.payload=='type_bars'){
 			handleQuickReplyBars(senderID, message, messageId);
 		}else if(quickReply.payload=='list_cocktails'){
 			handleQuickReplyDrink(senderID,message,messageId);
 			console.log('QuickReply-list_cocktails ');
+		}else if(quickReplyPayload.payload.includes("ingredient")){
+			var id=quickReplyPayload.payload.split("_")[1];
+			handleQuickReplyIngredients(senderID,message,messageId,id);
+			console.log('Ingredients',id);
+
 		}else{
 			handleQuickReply(senderID, quickReply, messageId);
 		}
@@ -209,7 +215,8 @@ function receivedPostback(event) {
 
 	// The 'payload' param is a developer-defined field which is set in a postback 
 	// button for Structured Messages. 
-	var payload = event.postback.payload;
+	var payload = event.postback.payload.split("_")[0];
+	console.log("testHugo",payload);
 	//console.log("payload",payload);
 	switch (payload) {
 		case 'FACEBOOK_WELCOME':
@@ -274,6 +281,16 @@ function receivedPostback(event) {
 
 				break;
 				//sendOptionsDrinks(senderID);
+		case 'ingredient':
+			console.log('ingredient',event)
+			if (!sessionIds.has(senderID)) {
+				sessionIds.set(senderID, uuid.v1());
+			}
+			var id=event.postback.payload.split("_")[1];
+			sendTypingOn(senderID);
+			handleQuickReplyIngredients(senderID,"ingredients",senderID,id);
+			sendTypingOff(senderID);
+			break;
 		case 'type_bars':
 				console.log('type_bars');
 				console.log(event);
@@ -320,6 +337,7 @@ function handleQuickReplyBars(senderID, meessage,messageID){
 
 	requestP(optionGetIdBar).then(fbRes=>{
 			var barInformation = JSON.parse(fbRes);
+			console.log("enviando",barInformation.results[0].id);
 			sendToDialogFlow(senderID, barInformation.results[0].id);
 
 	});
@@ -340,6 +358,101 @@ function handleQuickReplyDrink(senderID, meessage,messageID){
 			var response = JSON.parse(fbRes);
 			//sendToDialogFlow(senderID, barInformation.results[0].id);
 			let arrayDrinks = []
+			for(var i=0 ; i<4;i++){
+
+					var tempOption={
+						"title": response[i].name,
+						"image_url":"http://pngimg.com/uploads/beer/beer_PNG2369.png",
+						"subtitle": response[i].ingredients,
+						"buttons": [
+							{
+							"type": "postback",
+							"payload": "ingredient_"+response[i].id,
+							"title": "Ingredients"
+							}
+						],
+							"default_action": {
+									"type": "web_url",
+									"url": "https://tardigrd.com/",
+									"webview_height_ratio": "tall"
+							}
+					}
+
+					arrayDrinks.push(tempOption);
+
+			}
+
+
+			var messageData = {
+				recipient: {
+					id: senderID
+				},
+				message:{
+					attachment: {
+						type: "template",
+						"payload": {
+							"template_type": "list",
+							"top_element_style": "compact",
+							"elements": arrayDrinks
+							}
+					}
+				}}
+
+				callSendAPI(messageData);
+	});
+
+
+
+}
+
+function handleQuickReplyIngredients(senderID, meessage,messageID,id){
+
+	var optionGetIdDrink={
+		method: 'GET',
+		uri: 'http://aify-test.herokuapp.com/api/v1/drink_base/'+id
+	}
+
+	requestP(optionGetIdDrink).then(fbRes=>{
+			var response = JSON.parse(fbRes);
+			//sendToDialogFlow(senderID, barInformation.results[0].id);
+			let arrayDrinks = []
+			console.log("HugoTest",response);
+			var tempOption={
+				"title": response.name+"Prueba",
+				"image_url":"http://pngimg.com/uploads/beer/beer_PNG2369.png",
+				"subtitle": response.ingredients+"Prueba",
+				"default_action": {
+					"type": "web_url",
+					"url": "https://petersfancybrownhats.com/view?item=103",
+					"webview_height_ratio": "tall",
+				},
+				"buttons": [
+					{
+					"type": "postback",
+					"payload": "find_paris_"+response.id,
+					"title": "Find it in Paris"
+					}
+				]
+			}
+
+			arrayDrinks.push(tempOption);
+			var messageData = {
+				recipient: {
+					id: senderID
+				},
+				message:{
+					attachment: {
+						type: "template",
+						"payload": {
+							"template_type": "generic",
+							"elements": arrayDrinks
+							}
+					}
+				}}
+				console.log("enviadoCard",messageData);
+				callSendAPI(messageData);
+			
+		/*
 			for(var i=0 ; i<4;i++){
 
 					var tempOption={
@@ -380,13 +493,12 @@ function handleQuickReplyDrink(senderID, meessage,messageID){
 					}
 				}}
 
-				callSendAPI(messageData);
+				callSendAPI(messageData);*/
 	});
 
 
 
 }
-
 
 function handleQuickReply(senderID, quickReply, messageId) {
 	var quickReplyPayload = quickReply.payload;
@@ -485,7 +597,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 									"buttons": [
 										{
 										"type": "postback",
-										"payload": "ingredients",
+										"payload": "ingredient_"+response[i].id,
 										"title": "Ingredients"
 										}
 									],
@@ -568,11 +680,11 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 					break;
 		case 'show_bars':
-					console.log('show_bars', contexts[1].parameters.fields.age.structValue);
+					console.log('show_bars', contexts);
 					var idBar='';
-					var latitud= contexts[1].parameters.fields.number.numberValue;
-					var longitud= contexts[1].parameters.fields.number1.numberValue;
-					idBar = contexts[1].parameters.fields.age.structValue.fields.amount.numberValue;
+					var latitud= contexts[0].parameters.fields.number.numberValue;
+					var longitud= contexts[0].parameters.fields.number1.numberValue;
+					idBar = contexts[0].parameters.fields.age.structValue.fields.amount.numberValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
 					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
 					var messageData = {
@@ -1035,7 +1147,7 @@ function sendListInitOptions(recipientId){
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Bars",
+									"title": "   Bars    ",
 									"type": "postback",
 									 "payload":"bars"           
 								}
@@ -1047,7 +1159,7 @@ function sendListInitOptions(recipientId){
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Drinks",
+									"title": "  Drinks   ",
 									"type": "postback",
 									 "payload":"drinks"           
 								}
@@ -1059,7 +1171,7 @@ function sendListInitOptions(recipientId){
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
 								{
-									"title": "Update",
+									"title": "  Update   ",
 									"type": "postback",
 									 "payload":"preferences"           
 								}
