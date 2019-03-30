@@ -545,7 +545,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 				break;
 
 		case 'get-user-location':
-			var text = "Please tell me where you are 👇  ?";
+			var text = "Please tell me where you are 👇 ? (#tip: you can go to another location by dragging the map 👋)";
 			var replies=[
 				{
 				  "content_type": "location"
