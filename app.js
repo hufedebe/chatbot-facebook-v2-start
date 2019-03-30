@@ -1129,20 +1129,9 @@ function sendListInitOptions(recipientId){
 					"template_type": "list",
 					"top_element_style": "compact",
 					"elements": [
+	
 						{
-							"title": "I'm just chillin'",
-							"subtitle": "Just relax fellow human, life is short",
-							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
-							"buttons": [
-								{
-									"title": "Let's chill",
-									"type": "postback",
-									 "payload":"find"           
-								}
-							]
-						},
-						{
-							"title": "Bars",
+							"title": "Pubs/Bars",
 							"subtitle": "If you need suggestions try my repertoire",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
@@ -1154,7 +1143,7 @@ function sendListInitOptions(recipientId){
 							]
 						},
 						{
-							"title": "Drinks",
+							"title": "Beverages",
 							"subtitle": "Looking for inspiration? Try my memory cells drinking logs",
 							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
 							"buttons": [
@@ -1162,18 +1151,6 @@ function sendListInitOptions(recipientId){
 									"title": "  Drinks   ",
 									"type": "postback",
 									 "payload":"drinks"           
-								}
-							]
-						},
-						{
-							"title": "Preferences",
-							"subtitle": "Something I should be considering?",
-							"image_url": "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdfe.png",          
-							"buttons": [
-								{
-									"title": "  Update   ",
-									"type": "postback",
-									 "payload":"preferences"           
 								}
 							]
 						}
