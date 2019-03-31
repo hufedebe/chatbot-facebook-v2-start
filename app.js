@@ -687,6 +687,45 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 					idBar = contexts[0].parameters.fields.age.structValue.fields.amount.numberValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
 					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
+					
+
+					var messageData = {
+						recipient: {
+							id: sender
+						},
+						message:{
+							attachment:{
+								type :"template",
+								payload:{
+										template_type:"generic",
+										elements:[{
+											"title":"With friends is more fun. Share with friends and decide together",
+											"image_url":"https://media.giphy.com/media/77EiLGdpreFJm/giphy.gif",
+											"subtitle":"",
+											"default_action": {
+												"type": "web_url",
+												"url": "http://webview.tardigrd.com/case_tags/?id_tag="+idBar+"&plat="+latitud+"&plon="+longitud,
+												"webview_height_ratio": "tall"
+											},
+											"buttons":[
+												{	"type":"web_url",
+													"url":"http://webview.tardigrd.com/case_tags/?id_tag="+idBar+"&plat="+latitud+"&plon="+longitud,
+													"title":"See Suggestions"
+															}]      
+										}]
+								}
+							}
+						}
+					}
+
+
+
+
+
+
+
+
+					/*
 					var messageData = {
 						recipient: {
 							id: sender
@@ -707,7 +746,7 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 							}
 						}
 					}
-	
+					*/
 						callSendAPI(messageData);
 			
 					break;
