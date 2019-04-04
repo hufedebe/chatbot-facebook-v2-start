@@ -513,7 +513,7 @@ function handleEcho(messageId, appId, metadata) {
 	console.log("Received echo for message %s and app %d with metadata %s", messageId, appId, metadata);
 }
 
-function handleDialogFlowAction(sender, action, messages, contexts, parameters) {
+function handleDialogFlowAction(sender, action, messages, contexts, parameters,queryText) {
 	
 
 	switch(action){
@@ -680,11 +680,14 @@ function handleDialogFlowAction(sender, action, messages, contexts, parameters) 
 
 					break;
 		case 'show_bars':
-					console.log('show_bars', contexts);
+					console.log('show_bars', contexts[0].parameters);
+					console.log('show_bars',messages[0]);
+				
 					var idBar='';
 					var latitud= contexts[0].parameters.fields.number.numberValue;
 					var longitud= contexts[0].parameters.fields.number1.numberValue;
-					idBar = contexts[0].parameters.fields.age.structValue.fields.amount.numberValue;
+					idBar=queryText;
+					//idBar = contexts[0].parameters.fields.age.structValue.fields.amount.numberValue;
 					//http://webview.tardigrd.com/?ids=40&plat=48.86&plon=2.36
 					//http://webview.tardigrd.com/case_tags/?id_tag=42&id_tag=64&plat=48.86&plon=2.36 
 					
@@ -900,7 +903,7 @@ function handleMessages(messages, sender) {
 
 function handleDialogFlowResponse(sender, response) {
     let responseText = response.fulfillmentMessages.fulfillmentText;
-
+		let queryText = response.queryText;
     let messages = response.fulfillmentMessages;
     let action = response.action;
     let contexts = response.outputContexts;
@@ -909,7 +912,7 @@ function handleDialogFlowResponse(sender, response) {
 	sendTypingOff(sender);
 
     if (isDefined(action)) {
-        handleDialogFlowAction(sender, action, messages, contexts, parameters);
+        handleDialogFlowAction(sender, action, messages, contexts, parameters,queryText);
     } else if (isDefined(messages)) {
 		console.log("messages","entrando");
         handleMessages(messages, sender);
